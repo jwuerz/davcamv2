@@ -48,10 +48,16 @@ const MapUpdater: React.FC<{ cameras: any[], selectedCamera: string | null }> = 
   const map = useMap();
 
   useEffect(() => {
-    if (cameras.length > 0) {
+    if (cameras.length === 1) {
+      // Center on the single camera with a specific zoom level
+      map.setView([cameras[0].lat, cameras[0].lng], 14); // Use zoom level 14 for a single camera
+    } else if (cameras.length > 1) {
+      // Fit bounds for multiple cameras
       const bounds = L.latLngBounds(cameras.map(camera => [camera.lat, camera.lng]));
       map.fitBounds(bounds, { padding: [20, 20] });
     }
+    // If cameras.length is 0, the map will retain its current view,
+    // which defaults to davenportCenter and zoom={12} as set in MapContainer.
   }, [cameras, map]);
 
   return null;
